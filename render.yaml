@@ -1,0 +1,33 @@
+services:
+  - type: web
+    name: tts-discord-bot
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run setup:piper
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: CLIENT_ID
+        sync: false
+      - key: GUILD_ID
+        sync: false
+      - key: PORT
+        value: 3000
+      - key: DATA_DIR
+        value: /opt/render/project/src/data
+      - key: TTS_PROVIDER_ORDER
+        value: edge,piper
+      - key: ENABLE_MESSAGE_CONTENT_INTENT
+        value: false
+      - key: PIPER_INSTALL_DIR
+        value: ./vendor/piper
+      - key: PIPER_BINARY_URL
+        sync: false
+      - key: PIPER_PATH
+        value: ./vendor/piper/piper
+      - key: PIPER_MODEL_DIR
+        value: ./vendor/piper/models
+      - key: PIPER_MODEL_MANIFEST
+        sync: false

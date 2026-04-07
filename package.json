@@ -1,0 +1,29 @@
+{
+  "name": "tts-discord-bot",
+  "version": "1.0.0",
+  "description": "Discord TTS bot with Edge neural voices, queueing, and persistent guild settings",
+  "main": "src/index.js",
+  "type": "module",
+  "engines": {
+    "node": "22.x"
+  },
+  "scripts": {
+    "postinstall": "node scripts/ensure-discord-voice-compat.mjs",
+    "heroku-postbuild": "npm run setup:piper",
+    "start": "node src/index.js",
+    "deploy": "node src/deploy-commands.js",
+    "setup:piper": "node scripts/setup-piper.mjs",
+    "validate:autoplay": "node scripts/autoplay-validation-helper.mjs pending",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "@discordjs/voice": "^0.19.2",
+    "better-sqlite3": "^12.8.0",
+    "discord-api-types": "^0.38.43",
+    "discord.js": "^14.15.0",
+    "dotenv": "^16.4.0",
+    "ffmpeg-static": "^5.3.0",
+    "node-edge-tts": "^1.2.10",
+    "lavalink-client": "^2.9.7"
+  }
+}

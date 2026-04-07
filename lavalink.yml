@@ -1,0 +1,73 @@
+server:
+  port: 2333
+  address: 0.0.0.0
+
+lavalink:
+  plugins:
+    # YouTube source - required for Lavalink v4 (built-in YT support was removed in v4)
+    - dependency: "dev.lavalink.youtube:youtube-plugin:1.18.0"
+      repository: "https://maven.lavalink.dev/releases"
+    # LavaSrc - adds Spotify, Apple Music, Deezer support
+    - dependency: "com.github.topi314.lavasrc:lavasrc-plugin:4.8.1"
+      repository: "https://maven.lavalink.dev/releases"
+  server:
+    password: "${LAVALINK_SERVER_PASSWORD}"
+    sources:
+      youtube: false  # disabled in favour of youtube-plugin above
+
+# Plugin configuration (separate from the download list above)
+plugins:
+  youtube:
+    enabled: true
+    allowSearch: true
+    allowDirectVideoIds: false
+    allowDirectPlaylistIds: false
+    # Keep youtube-source focused on search/discovery where possible, but still
+    # retain an OAuth-capable playback client for login-gated YouTube mirrors.
+    oauth:
+      enabled: true
+      refreshToken: "${YOUTUBE_OAUTH_REFRESH_TOKEN:}"
+    remoteCipher:
+      url: "https://cipher.kikkia.dev/"
+      userAgent: "harmonia-bot"
+    clients:
+      - MUSIC          # YouTube Music search / metadata
+      - ANDROID_VR     # broader search/playlist loading than ANDROID_MUSIC
+      - WEB            # broader metadata + playback fallback
+      - WEBEMBEDDED    # embedded playback fallback
+      - MWEB           # mobile web fallback for searches/playlists
+      - TV             # OAuth-compatible playback fallback for login-gated videos
+  lavasrc:
+    providers:
+      - "ytmsearch:\"%ISRC%\""
+      - "ytsearch:\"%ISRC%\""
+      - "ytmsearch:%QUERY%"
+      - "ytsearch:%QUERY%"
+    sources:
+      spotify: true
+      appleMusic: false
+      deezer: false
+      yandexMusic: false
+      ytdlp: true
+    spotify:
+      clientId: "${SPOTIFY_CLIENT_ID:}"
+      clientSecret: "${SPOTIFY_CLIENT_SECRET:}"
+      preferAnonymousToken: ${SPOTIFY_PREFER_ANONYMOUS_TOKEN:false}
+      customTokenEndpoint: "${SPOTIFY_TOKEN_ENDPOINT:}"
+      resolveArtistsInSearch: true
+      countryCode: "IN"
+    ytdlp:
+      path: "yt-dlp"
+      searchLimit: 10
+      mixPlaylistLoadLimit: 25
+      playlistLoadLimit: 1000
+    deezer:
+      countryCode: "IN"
+
+metrics:
+  enabled: true
+
+caching:
+  track:
+    enabled: true
+    size: 1000

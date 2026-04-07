@@ -1,0 +1,75 @@
+{
+  "name": "harmonia",
+  "description": "Discord TTS bot with queueing, revealable speech activity posts, and Edge/Piper speech support.",
+  "repository": "https://github.com/Vikhyat22/harmonia",
+  "keywords": [
+    "discord",
+    "tts",
+    "bot",
+    "node"
+  ],
+  "stack": "heroku-24",
+  "formation": {
+    "worker": {
+      "quantity": 1,
+      "size": "eco"
+    }
+  },
+  "env": {
+    "DISCORD_BOT_TOKEN": {
+      "description": "Discord bot token from the Developer Portal."
+    },
+    "CLIENT_ID": {
+      "description": "Discord application client ID."
+    },
+    "GUILD_ID": {
+      "description": "Optional test server ID for faster slash-command deploys.",
+      "required": false
+    },
+    "ENABLE_MESSAGE_CONTENT_INTENT": {
+      "description": "Enable only if you also enable the Message Content privileged intent in Discord.",
+      "value": "false",
+      "required": false
+    },
+    "ENABLE_HTTP_SERVER": {
+      "description": "Enable the HTTP dashboard and /health routes. Leave false for a worker-only Heroku bot.",
+      "value": "false",
+      "required": false
+    },
+    "DATA_DIR": {
+      "description": "Optional writable directory for settings and history. Heroku dyno storage is ephemeral.",
+      "required": false
+    },
+    "TTS_PROVIDER_ORDER": {
+      "description": "Speech provider order.",
+      "value": "edge,piper",
+      "required": false
+    },
+    "PIPER_INSTALL_DIR": {
+      "description": "Directory where Piper should be installed during build.",
+      "value": "./vendor/piper",
+      "required": false
+    },
+    "PIPER_BINARY_URL": {
+      "description": "Linux Piper binary archive URL.",
+      "required": false
+    },
+    "PIPER_PATH": {
+      "description": "Path to the Piper binary in the dyno slug.",
+      "value": "./vendor/piper/piper",
+      "required": false
+    },
+    "PIPER_MODEL_DIR": {
+      "description": "Directory containing Piper voice models in the dyno slug.",
+      "value": "./vendor/piper/models",
+      "required": false
+    },
+    "PIPER_MODEL_MANIFEST": {
+      "description": "JSON manifest describing Piper voice model downloads.",
+      "required": false
+    }
+  },
+  "scripts": {
+    "postdeploy": "npm run deploy"
+  }
+}

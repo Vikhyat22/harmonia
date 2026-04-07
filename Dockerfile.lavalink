@@ -1,0 +1,29 @@
+FROM ubuntu:22.04
+
+RUN apt-get update && apt-get install -y \
+    wget \
+    curl \
+    python3 \
+    python3-pip \
+    openjdk-17-jre-headless \
+    && python3 -m pip install --no-cache-dir --upgrade yt-dlp \
+    && rm -rf /var/lib/apt/lists/*
+
+ENV LAVALINK_VERSION=4.2.2
+ENV LAVALINK_URL=https://github.com/lavalink-devs/Lavalink/releases/download/${LAVALINK_VERSION}/Lavalink.jar
+ENV LAVALINK_HOME=/Lavalink
+ENV PORT=2333
+
+RUN mkdir -p ${LAVALINK_HOME} \
+    && wget -O ${LAVALINK_HOME}/Lavalink.jar ${LAVALINK_URL}
+
+COPY lavalink.yml ${LAVALINK_HOME}/application.yml
+
+WORKDIR ${LAVALINK_HOME}
+
+EXPOSE 2333
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=60s --retries=3 \
+    CMD sh -c 'curl -fsS -H "Authorization: ${LAVALINK_SERVER_PASSWORD}" http://localhost:2333/version >/dev/null || exit 1'
+
+ENTRYPOINT ["java", "-Xmx350m", "-Xms350m", "-jar", "Lavalink.jar"]
